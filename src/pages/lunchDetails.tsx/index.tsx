@@ -10,8 +10,8 @@ import Typography from "@mui/material/Typography";
 // * COMPONENTS IMPORTS
 import DetailsSkeletons from "../../components/Skeletons/DetailsSkeleton";
 //* ASSETS / ICONS IMPORTS
-import FastfoodRoundedIcon from '@mui/icons-material/FastfoodRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import FastfoodRoundedIcon from "@mui/icons-material/FastfoodRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 // * FUNCS IMPORT
 import { LunchFormContext } from "../../context/LunchFormContext";
@@ -27,7 +27,8 @@ const CardContent = styled("div")(() => ({
 const LunchDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { isLoading, getLunch, lunchData, deleteLunch } = useContext(LunchFormContext);
+  const { isLoading, getLunch, lunchData, deleteLunch, addLunchItem } =
+    useContext(LunchFormContext);
 
   useEffect(() => {
     if (id) {
@@ -38,16 +39,20 @@ const LunchDetails: React.FC = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
-      <Paper sx={{
-          // borderLeft: `5px solid ${lunchData !== null ? lunchData.available ? "#4BD66D" : "#D92525" : "#878787"}`,
-        }}>
+      <Paper
+        sx={
+          {
+            // borderLeft: `5px solid ${lunchData !== null ? lunchData.available ? "#4BD66D" : "#D92525" : "#878787"}`,
+          }
+        }
+      >
         <Box p={4}>
           {isLoading ? (
             <DetailsSkeletons />
           ) : (
             lunchData && (
-               <>
-              {/* //   <FastfoodRoundedIcon fontSize="large" />
+              <>
+                {/* //   <FastfoodRoundedIcon fontSize="large" />
               //   <Typography variant="h4" component="h1">
               //     {lunchData.title}
               //   </Typography>
@@ -71,16 +76,18 @@ const LunchDetails: React.FC = () => {
               //       Borrowed by: {lunchData.borrowed_by}
               //     </Typography>
               //   </CardContent> */}
-               </>
+              </>
             )
           )}
           <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
             <IconButton
-              onClick={() => navigate(paths.editLunch + lunchData?.lunch_id)}
+            // onClick={() => navigate(paths.editLunch + lunchData?.lunch_id)}
             >
               <EditRoundedIcon />
             </IconButton>
-            <IconButton onClick={() => deleteLunch(lunchData?.lunch_id)}>
+            <IconButton
+            // onClick={() => deleteLunch(lunchData?.lunch_id)}
+            >
               <DeleteRoundedIcon />
             </IconButton>
           </Box>

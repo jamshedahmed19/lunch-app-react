@@ -92,6 +92,8 @@ const StyledListItem = styled(ListItem)<ListItemProps>(({ theme }) => ({
 
 const LunchList: React.FC = () => {
   const navigate = useNavigate();
+  const { isLoading, deleteLunch, lunchData, addLunchItem } =
+    useContext(LunchFormContext);
   const [element, setElement] = useState<any>([`<div></div>`]);
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [lunchItem, setLunchItem] = React.useState<number | null>(null);
@@ -108,8 +110,7 @@ const LunchList: React.FC = () => {
     }
   };
   const { id } = useParams<{ id: string }>();
-  const { isLoading, getLunch, lunchData, deleteLunch } =
-    useContext(LunchFormContext);
+  const { getLunch } = useContext(LunchFormContext);
 
   useEffect(() => {
     if (id) {
@@ -145,128 +146,121 @@ const LunchList: React.FC = () => {
     // @ts-ignore-end
   };
 
-  const addLunch = () => {
-    setLunchItem(
-      (lunchItem) => (lunchItem = lunchItem !== null ? lunchItem + 1 : 1)
-    );
-  };
-
   return (
     <Grid container spacing={2} justifyContent="center">
       <div>
-        {[...Array(30)].map((_, index) => (
-          <Accordion
-            key={index}
-            draggable={true}
-            expanded={expanded === `${index}`}
-            id={`${index}`}
-            onChange={handleChange(`${index}`)}
-            disableGutters
-            square={false}
-            // onDragStart={(e: any) => dragStart(e, index.toString())}
-            // onDragOver={(e) => handleAccordionDragOver(e, index.toString())}
-          >
-            <StyledAccordionSummary
-              sx={{
-                pointerEvents: "none",
-              }}
-              expandIcon={
-                <ExpandMoreIcon
+        {[...Array(10)].map((_, index) => (
+            <Accordion
+              key={index}
+              draggable={true}
+              expanded={expanded === `${index}`}
+              id={`${index}`}
+              onChange={handleChange(`${index}`)}
+              disableGutters
+              square={false}
+              // onDragStart={(e: any) => dragStart(e, index.toString())}
+              // onDragOver={(e) => handleAccordionDragOver(e, index.toString())}
+            >
+              <StyledAccordionSummary
+                sx={{
+                  pointerEvents: "none",
+                }}
+                expandIcon={
+                  <ExpandMoreIcon
+                    sx={{
+                      pointerEvents: "auto",
+                    }}
+                  />
+                }
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar
+                    sx={{ width: 24, height: 24 }}
+                    src="/broken-image.jpg"
+                  />
+                  <Typography
+                    sx={{
+                      margin: "0 10px",
+                      fontWeight: "400",
+                      fontFamily: "Poppins",
+                    }}
+                    variant="body2"
+                  >
+                    Jamshed Ahmed {index}
+                  </Typography>
+                  <Chip
+                    sx={{
+                      margin: "0 5px",
+                    }}
+                    size="small"
+                    color="success"
+                    icon={<CheckCircleOutlineRoundedIcon />}
+                    label="updated"
+                  />
+                  <Chip
+                    sx={{
+                      margin: "0 5px",
+                    }}
+                    size="small"
+                    color="error"
+                    icon={<HighlightOffRoundedIcon />}
+                    label="not updated"
+                  />
+                  <Chip
+                    sx={{
+                      margin: "0 5px",
+                    }}
+                    size="small"
+                    color="warning"
+                    icon={<DoNotDisturbAltRoundedIcon />}
+                    label="not ordering"
+                  />
+                </Box>
+                <Box
                   sx={{
                     pointerEvents: "auto",
                   }}
-                />
-              }
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignContent: "center",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar
-                  sx={{ width: 24, height: 24 }}
-                  src="/broken-image.jpg"
-                />
-                <Typography
-                  sx={{
-                    margin: "0 10px",
-                    fontWeight: "400",
-                    fontFamily: "Poppins",
-                  }}
-                  variant="body2"
                 >
-                  Jamshed Ahmed {index}
-                </Typography>
-                <Chip
+                  <Button
+                    variant="text"
+                    color="info"
+                    endIcon={<AddRoundedIcon />}
+                  >
+                    Add Lunch
+                  </Button>
+                </Box>
+              </StyledAccordionSummary>
+              <AccordionDetails>
+                <Box
                   sx={{
-                    margin: "0 5px",
+                    backgroundColor: lunchItem !== null ? "#fff" : "#eee",
+                    borderRadius: "5px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "30px 0",
+                    margin: "10px",
                   }}
-                  size="small"
-                  color="success"
-                  icon={<CheckCircleOutlineRoundedIcon />}
-                  label="updated"
-                />
-                <Chip
-                  sx={{
-                    margin: "0 5px",
-                  }}
-                  size="small"
-                  color="error"
-                  icon={<HighlightOffRoundedIcon />}
-                  label="not updated"
-                />
-                <Chip
-                  sx={{
-                    margin: "0 5px",
-                  }}
-                  size="small"
-                  color="warning"
-                  icon={<DoNotDisturbAltRoundedIcon />}
-                  label="not ordering"
-                />
-              </Box>
-              <Box
-                sx={{
-                  pointerEvents: "auto",
-                }}
-              >
-                <Button
-                  variant="text"
-                  color="info"
-                  endIcon={<AddRoundedIcon />}
                 >
-                  Add Lunch
-                </Button>
-              </Box>
-            </StyledAccordionSummary>
-            <AccordionDetails>
-              <Box
-                sx={{
-                  backgroundColor: lunchItem !== null ? "#fff" : "#eee",
-                  borderRadius: "5px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "30px 0",
-                  margin: "10px",
-                }}
-              >
-                {lunchItem !== null && (
-                  <List dense={true} sx={{ width: "100%" }}>
-                    {[...Array(lunchItem === null ? 1 : lunchItem)].map(
-                      (_, index) => (
+                  {lunchData[index].orderItems !== null && (
+                    <List dense={true} sx={{ width: "100%" }}>
+                      {lunchData[index].orderItems.map((_, _index) => (
                         <StyledListItem
-                          key={index}
+                          key={_index}
                           divider
                           draggable
-                          onDrag={(e: any) => dragStart(e, index.toString())}
+                          onDrag={(e: any) => dragStart(e, _index.toString())}
                           sx={{
                             padding: "15px 0",
                             display: "flex",
@@ -363,39 +357,58 @@ const LunchList: React.FC = () => {
                             </IconButton>
                             <IconButton
                               color="error"
-                              // onClick={() =>
-                              //   incrementQuantity(cellValue.menuItem_id)
+                              // onClick={
+                              //   // deleteLunch(cellValue.menuItem_id)
                               // }
                             >
                               <DeleteOutlineRoundedIcon />
                             </IconButton>
                           </ListItemSecondaryAction>
                         </StyledListItem>
-                      )
-                    )}
-                  </List>
-                )}
-                {lunchItem === null && (
-                  <>
-                    <img height="80px" src={EmptyIcon} alt="Empty Order Icon" />
-                    <Typography
-                      align="center"
-                      variant="subtitle2"
-                      color="textSecondary"
-                      sx={{
-                        margin: "10px 20px",
-                        fontWeight: 400,
-                      }}
-                    >
-                      No lunch added yet. Click on the button below to add one.
-                    </Typography>
-                  </>
-                )}
-                <Button onClick={addLunch}>Add Lunch Item</Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+                      ))}
+                    </List>
+                  )}
+                  {lunchData[index].orderItems !== null && (
+                    <>
+                      <img
+                        height="80px"
+                        src={EmptyIcon}
+                        alt="Empty Order Icon"
+                      />
+                      <Typography
+                        align="center"
+                        variant="subtitle2"
+                        color="textSecondary"
+                        sx={{
+                          margin: "10px 20px",
+                          fontWeight: 400,
+                        }}
+                      >
+                        No lunch added yet. Click on the button below to add
+                        one.
+                      </Typography>
+                    </>
+                  )}
+                  <Button
+                    onClick={() =>
+                      addLunchItem(_index, {
+                        selectedItem: {
+                          name: "Chicken Biryani",
+                          available: true,
+                          price: 100,
+                          quantity: 1,
+                          category: "Chicken",
+                        },
+                        quantity: 1,
+                      })
+                    }
+                  >
+                    Add Lunch
+                  </Button>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          ))}
       </div>
       <div
         id="drag-drop-container"

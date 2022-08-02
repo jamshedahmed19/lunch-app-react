@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 // * FUNCS IMPORT
 import useValidation from "../utils/hooks/useValidation";
 // * UTILS
-import { ILunch, IMenuItem } from "../utils/interfaces/lunch.interface";
+import { ILunch, IMenuItem, ILunchItem } from "../utils/interfaces/lunch.interface";
 import { MENU_LIST } from "../utils/mockData/lunch";
 import { paths } from "../routes/paths";
 
@@ -28,7 +28,7 @@ export interface IFormErrors {
 }
 
 interface ILunchFormContextState {
-  lunchData: ILunch | null;
+  lunchData: ILunch[] | null;
   menuItem: IMenuItem | null;
   menuList: IMenuItem[] | null;
   isLoading: boolean;
@@ -43,6 +43,7 @@ interface ILunchFormContextState {
   ) => void;
   getLunchList: () => void;
   addLunch: () => void;
+  addLunchItem: (id: string, lunchItem: ILunchItem) => void;
   getLunch: (id: string) => void;
   updateLunch: (id: string) => void;
   deleteLunch: (id: string | undefined) => void;
@@ -82,6 +83,7 @@ const defaultState: ILunchFormContextState = {
   ) => {},
   getLunchList: async () => {},
   addLunch: async () => {},
+  addLunchItem: async (id: string, lunchItem: ILunchItem) => {},
   getLunch: async (id: string) => {},
   updateLunch: async (id: string) => {},
   deleteLunch: async (id: string | undefined) => {},
@@ -99,7 +101,7 @@ export const LunchFormContextProvider: React.FC<
   const navigate = useNavigate();
 
   // const [values, setValues] = useState<IFormValues>(defaultState.values);
-  const [lunchData, setLunchData] = useState<ILunch | null>(
+  const [lunchData, setLunchData] = useState<ILunch[] | null>(
     defaultState.lunchData
   );
   const [lunchList, setLunchList] = useState<ILunch[] | null>(null);
@@ -277,29 +279,25 @@ export const LunchFormContextProvider: React.FC<
     }, 1000);
   };
 
-  const deleteLunch = async (id: string | undefined) => {
-    // setIsLoading(true);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   let index: number;
-    //   if (lunchList !== null) {
-    //     index = lunchList.findIndex((lunch) => lunch.lunch_id === id);
-    //   } else {
-    //     index = LUNCH_LIST.findIndex((lunch) => lunch.lunch_id === id);
-    //   }
-    //   let updateLunchList;
-    //   if (lunchList !== null) {
-    //     updateLunchList = [...lunchList];
-    //   } else {
-    //     updateLunchList = [...LUNCH_LIST];
-    //   }
-    //   if (index > -1) {
-    //     updateLunchList.splice(index, 1); // * 2nd parameter means remove one item only
-    //   }
-    //   setLunchList(updateLunchList);
-    //   // * navigate to the listing page
-    //   navigate(paths.lunch);
-    // }, 1000);
+  const addLunchItem = async (id: string, lunchItem: ILunchItem) => {
+    if(lunchData !== null) {
+      const index = lunchData.findIndex((lunch) => lunch.lunch_id === id);
+      lunchData[index].orderItems.push(lunchItem)
+    }
+    
+
+  }
+
+  const deleteLunch = async (id: string) => {
+    // select an index with id and delete that lunch item in lunch data array
+    if (lunchList !== null) {
+      const index = lunchList.findIndex((lunch) => lunch.lunch_id === id);
+      const updatedLunchList = update(lunchList, {
+        $splice: [[index, 1]],
+      });
+      console.log(updatedLunchList)
+      setLunchList(updatedLunchList);
+    }
   };
 
   const handleFormSubmit = (
@@ -325,6 +323,7 @@ export const LunchFormContextProvider: React.FC<
     errors,
     isLoading,
     addLunch,
+    addLunchItem,
     getLunchList,
     getLunch,
     updateLunch,
